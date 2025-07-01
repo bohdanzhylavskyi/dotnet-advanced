@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FileSystemVisitor\FileSystemVisitor.csproj" />
     <ProjectReference Include="..\Fundametals (FileSystemVisitor)\FileSystemVisitor.csproj" />
   </ItemGroup>
 
