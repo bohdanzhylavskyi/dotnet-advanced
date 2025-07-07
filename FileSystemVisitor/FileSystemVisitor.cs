@@ -35,11 +35,15 @@
 
         public IEnumerable<FileSystemEntry> GetAllEntries()
         {
+            VerifyTargetFolderExists();
+
             return ReadEntries();
         }
 
         public IEnumerable<FileSystemEntry> SearchEntries()
         {
+            VerifyTargetFolderExists();
+
             if (this.Filter is null)
             {
                 throw new Exception("Filter must be configured for search operation");
@@ -76,6 +80,14 @@
             }
 
             this.FireSearchFinishedEvent();
+        }
+
+        private void VerifyTargetFolderExists()
+        {
+            if (!FsReader.FolderExists(this.TargetFolderPath))
+            {
+                throw new InvalidOperationException("Target folder does not exist");
+            }
         }
 
         private void FireSearchStartedEvent()
@@ -204,7 +216,7 @@
 
         private List<FileSystemEntry> ReadEntries()
         {
-            return this.FsReader.scan(this.TargetFolderPath);
+            return this.FsReader.Scan(this.TargetFolderPath);
         }
 
         private static void ThrowSearchCancelledException()

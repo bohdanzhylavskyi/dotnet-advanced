@@ -34,7 +34,7 @@ namespace TestProject1
 
             var fsVisitor = new FileSystemVisitor(TargetFolder, fsReaderMock.Object);
 
-            Assert.AreEqual(fsVisitor.GetAllEntries().Count(), fsReaderMock.Object.scan(TargetFolder).Count());
+            Assert.AreEqual(fsVisitor.GetAllEntries().Count(), fsReaderMock.Object.Scan(TargetFolder).Count());
         }
 
         [TestMethod]
@@ -205,8 +205,10 @@ namespace TestProject1
                 CreateFolderEntry($"{TargetFolder}/subfolder")
             };
 
-            fsReaderMock.Setup((f) => f.scan(TargetFolder))
+            fsReaderMock.Setup((f) => f.Scan(TargetFolder))
                         .Returns(mockedFsEntries);
+
+            fsReaderMock.Setup((f) => f.FolderExists(TargetFolder)).Returns(true);
 
             return fsReaderMock;
         }

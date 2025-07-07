@@ -15,7 +15,7 @@ namespace Fundametals__FileSystemVisitor_
         [Option('t', "target-path", Required = true, HelpText = "Target folder path")]
         public string TargetPath { get; set; } = "";
 
-        [Option('f', "filter", Required = true, HelpText = "Filter")]
+        [Option('f', "filter", Required = true, HelpText = "Filter (GlobPattern/FoldersOnly/FilesOnly)")]
         public FilterOption Filter { get; set; }
 
         [Option('l', "log-events", Required = false, HelpText = "Log events")]
