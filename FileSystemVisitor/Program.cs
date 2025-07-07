@@ -65,9 +65,10 @@ namespace Fundametals__FileSystemVisitor_
 
         private static FileSystemVisitorFilter ResolveFilter(Options options)
         {
+            var filterOption = options.Filter;
             var globPattern = options.GlobPattern;
 
-            switch (options.Filter)
+            switch (filterOption)
             {
                 case FilterOption.FoldersOnly:
                     return CreateFoldersOnlyFilter(globPattern);
@@ -76,7 +77,7 @@ namespace Fundametals__FileSystemVisitor_
                 case FilterOption.GlobPattern:
                     return CreateGlobPatternFilter(globPattern);
                 default:
-                    throw new InvalidOperationException($"Unknown filter option '{options.Filter}'");
+                    throw new InvalidOperationException($"Unknown filter option '{filterOption}'");
             }
         }
 
