@@ -14,7 +14,7 @@ namespace TestProject1
     }
 
     [TestClass]
-    public sealed class Test1
+    public sealed class FileSystemVisitorTests
     {
         private string TargetFolder = "C:/documents";
         private Mock<IEventsHandler> EventsHandler { get; set; }
@@ -28,7 +28,7 @@ namespace TestProject1
         }
 
         [TestMethod]
-        public void TestGetAllEntries()
+        public void GetAllEntries_ReturnsCorrectResults()
         {
             var fsReaderMock = this.ConfigureFsReaderMock();
 
@@ -38,7 +38,7 @@ namespace TestProject1
         }
 
         [TestMethod]
-        public void TestSearchEntries()
+        public void SearchEntries_ReturnsCorrectResults()
         {
             var fsReaderMock = this.ConfigureFsReaderMock();
 
@@ -53,7 +53,7 @@ namespace TestProject1
         }
 
         [TestMethod]
-        public void TestEvents()
+        public void SearchEntries_EventsInvokedCorrectly()
         {
             var fsReaderMock = this.ConfigureFsReaderMock();
 
@@ -105,7 +105,7 @@ namespace TestProject1
         }
 
         [TestMethod]
-        public void TestSearchStartedEvent_Cancel()
+        public void SearchEntries_SearchCancelled_SearchCancelledExceptionThrown()
         {
             var eventsHandler = new Mock<IEventsHandler>();
             var fsReaderMock = this.ConfigureFsReaderMock();
@@ -133,7 +133,7 @@ namespace TestProject1
         }
 
         [TestMethod]
-        public void TestFilteredEntryFoundEvent_Ignore()
+        public void SearchEntries_IgnoredEntriesAreNotPresentedInResultingList()
         {
             var eventsHandler = new Mock<IEventsHandler>();
             var fsReaderMock = this.ConfigureFsReaderMock();

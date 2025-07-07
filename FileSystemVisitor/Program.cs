@@ -52,38 +52,49 @@ namespace Fundametals__FileSystemVisitor_
             }
         }
 
-        static bool FoldersOnly(FileSystemEntry entry)
+        private static FileSystemVisitorFilter ResolveFilter(Options options)
         {
-            return entry.Type == FileSystemEntryType.Folder;
-        }
-        
-        static bool FilesOnly(FileSystemEntry entry)
-        {
-            return entry.Type == FileSystemEntryType.File;
+            var globPattern = options.GlobPattern;
+
+            switch (options.Filter)
+            {
+                case FilterOption.FoldersOnly:
+                    return CreateFoldersOnlyFilter(globPattern);
+                case FilterOption.FilesOnly:
+                    return CreateFilesOnlyFilter(globPattern);
+                case FilterOption.GlobPattern:
+                    return CreateGlobPatternFilter(globPattern);
+                default:
+                    throw new InvalidOperationException($"Unknown filter option '{options.Filter}'");
+            }
         }
 
-        static FileSystemVisitorFilter CreateGlobPatternFilter(string globPattern)
+        private static FileSystemVisitorFilter CreateFoldersOnlyFilter(string globPattern)
+        {
+            return (FileSystemEntry entry) =>
+                entry.Type == FileSystemEntryType.Folder
+                && IsPathMatchesGlob(entry.Path, globPattern);
+        }
+
+        private static FileSystemVisitorFilter CreateFilesOnlyFilter(string globPattern)
+        {
+            return (FileSystemEntry entry) =>
+                entry.Type == FileSystemEntryType.File
+                && IsPathMatchesGlob(entry.Path, globPattern);
+        }
+
+        private static FileSystemVisitorFilter CreateGlobPatternFilter(string globPattern)
+        {
+            return (FileSystemEntry entry) => IsPathMatchesGlob(entry.Path, globPattern);
+        }
+
+        private static bool IsPathMatchesGlob(string path, string globPattern)
         {
             string regexPattern = "^" + Regex.Escape(globPattern)
                .Replace(@"\*", ".*")
                .Replace(@"\?", ".") + "$";
 
-            return (FileSystemEntry entry) => Regex.IsMatch(entry.Path, regexPattern);
-        }
-
-        private static FileSystemVisitorFilter ResolveFilter(Options options)
-        {
-            switch (options.Filter)
-            {
-                case FilterOption.FoldersOnly:
-                    return FoldersOnly;
-                case FilterOption.FilesOnly:
-                    return FilesOnly;
-                case FilterOption.GlobPattern:
-                    return CreateGlobPatternFilter(options.GlobPattern);
-                default:
-                    throw new InvalidOperationException($"Unknown filter option '{options.Filter}'");
-            }
+            return Regex.IsMatch(path, regexPattern);
         }
     }
 }

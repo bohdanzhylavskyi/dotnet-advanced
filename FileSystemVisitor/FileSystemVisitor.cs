@@ -20,38 +20,6 @@
 
     public delegate bool FileSystemVisitorFilter(FileSystemEntry entry);
 
-    public interface IFileSystemReader
-    {
-        public List<FileSystemEntry> scan(string targetFolderPath);
-    }
-
-    public class FileSystemReader : IFileSystemReader
-    {
-        public List<FileSystemEntry> scan(string targetFolderPath)
-        {
-            var folders = Directory.GetDirectories(targetFolderPath, "*", SearchOption.AllDirectories)
-                            .Select((path) => new FileSystemEntry(FileSystemEntryType.Folder, path)).ToList();
-
-            var files = Directory.GetFiles(targetFolderPath, "*", SearchOption.AllDirectories)
-                .Select((path) => new FileSystemEntry(FileSystemEntryType.File, path)).ToList();
-
-            var entries = folders.Concat(files).ToList();
-
-            return entries;
-        }
-    }
-
-    public class MockedFileSystemReader : IFileSystemReader
-    {
-        public List<FileSystemEntry> scan(string targetFolderPath)
-        {
-            return new List<FileSystemEntry>()
-            {
-                new FileSystemEntry(FileSystemEntryType.File, "x")
-            };
-        }
-    }
-
     public class FileSystemVisitor
     {
         private readonly string TargetFolderPath;
@@ -255,17 +223,6 @@
         private List<FileSystemEntry> ReadEntries()
         {
             return this.FsReader.scan(this.TargetFolderPath);
-
-
-            //var folders = Directory.GetDirectories(this.TargetFolderPath, "*", SearchOption.AllDirectories)
-            //                .Select((path) => new FileSystemEntry(FileSystemEntyType.Folder, path)).ToList();
-
-            //var files = Directory.GetFiles(this.TargetFolderPath, "*", SearchOption.AllDirectories)
-            //    .Select((path) => new FileSystemEntry(FileSystemEntyType.File, path)).ToList();
-
-            //var entries = folders.Concat(files).ToList();
-
-            //return entries;
         }
 
         private static void ThrowSearchCancelledException()
@@ -278,9 +235,12 @@
             return $"[EVENT] {log}";
         }
 
-        private static void PrintEventLogIfEnabled(string log)
+        private void PrintEventLogIfEnabled(string log)
         {
-            Console.WriteLine(log);
+            if (LogEvents)
+            {
+                Console.WriteLine(log);
+            }
         }
     }
 }

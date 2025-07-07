@@ -2,7 +2,7 @@
   "profiles": {
     "Fundametals (FileSystemVisitor)": {
       "commandName": "Project",
-      "commandLineArgs": " --target-path \"D:\\projects\\test\" --filter GlobPattern -g \"*.png\""
+      "commandLineArgs": " --target-path \"D:\\projects\\test\" --filter GlobPatternt -g \"*\""
     }
   }
 }
