@@ -29,7 +29,7 @@ namespace Fundametals__FileSystemVisitor_
     {
         static void Main(string[] args)
         {
-            var options = Parser.Default.ParseArguments<Options>(args).WithParsed(Run);
+            Parser.Default.ParseArguments<Options>(args).WithParsed(Run);
         }
 
         static void Run(Options options)
@@ -39,16 +39,27 @@ namespace Fundametals__FileSystemVisitor_
             var logEvents = options.LogEvents;
 
             IFileSystemReader fsReader = new FileSystemReader();
-            var fsVisitor = new FileSystemVisitor(targetPath, fsReader, filter, logEvents);
 
-            Print(fsVisitor.SearchEntries());
+            var fsVisitor = new FileSystemVisitor(targetPath, fsReader, filter, logEvents);
+            
+            List<FileSystemEntry> searchResult = fsVisitor.SearchEntries().ToList();
+
+            PrintSearchResult(searchResult);
         }
 
-        static void Print(IEnumerable<FileSystemEntry> fsEntries)
+        static void PrintSearchResult(List<FileSystemEntry> fsEntries)
         {
+            if (fsEntries.Count == 0)
+            {
+                Console.WriteLine("\nNothing found\n");
+                return;
+            }
+
+            Console.WriteLine("\nSearch result:\n");
+
             foreach (var entry in fsEntries)
             {
-                Console.WriteLine(entry.Path);
+                Console.WriteLine($"[{entry.Type}] {entry.Path}");
             }
         }
 
